@@ -8,5 +8,7 @@ namespace CoffeeShop.Model
 {
     public class Customer : BaseEntity
     {
+        public string Code { get; set; }
+        public string Description { get; set; }
     }
 }
