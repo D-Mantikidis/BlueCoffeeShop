@@ -13,5 +13,9 @@ namespace CoffeeShop.Model
         Food
     }
 
-    public
+    public enum PaymentMethodEnum
+    {
+        Cash,
+        Credit_Card
+    }
 }
