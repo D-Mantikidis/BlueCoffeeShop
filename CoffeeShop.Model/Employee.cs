@@ -6,13 +6,6 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Model
 {
-    public enum EmployeeType
-    {
-        Manager,
-        Cashier,
-        Barista,
-        Waiter
-    }
     public class Employee : BaseEntity
     {
         public string Name { get; set; }
