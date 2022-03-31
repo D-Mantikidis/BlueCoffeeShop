@@ -9,7 +9,9 @@ namespace CoffeeShop.Model
     public enum EmployeeType
     {
         Manager,
-        Cashier
+        Cashier,
+        Barista,
+        Waiter
     }
     public class Employee : BaseEntity
     {
