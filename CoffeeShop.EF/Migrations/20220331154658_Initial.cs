@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CoffeeShop.EF.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -109,8 +109,7 @@ namespace CoffeeShop.EF.Migrations
                 name: "TransactionLine",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     Qty = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -128,8 +127,8 @@ namespace CoffeeShop.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TransactionLine_Transaction_TransactionID",
-                        column: x => x.TransactionID,
+                        name: "FK_TransactionLine_Transaction_Id",
+                        column: x => x.Id,
                         principalTable: "Transaction",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -149,11 +148,6 @@ namespace CoffeeShop.EF.Migrations
                 name: "IX_TransactionLine_ProductID",
                 table: "TransactionLine",
                 column: "ProductID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TransactionLine_TransactionID",
-                table: "TransactionLine",
-                column: "TransactionID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

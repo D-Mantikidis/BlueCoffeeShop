@@ -18,6 +18,7 @@ namespace CoffeeShop.EF.Configuration
             builder.Property(transaction => transaction.Id).ValueGeneratedOnAdd();
             builder.HasOne(transaction => transaction.Customer).WithMany(customer => customer.Transactions).HasForeignKey(transaction => transaction.CustomerID).IsRequired();
             builder.HasOne(transaction => transaction.Employee).WithMany(employee => employee.Transactions).HasForeignKey(transaction => transaction.EmployeeID).IsRequired();
+            builder.HasMany(transaction => transaction.TransactionLines).WithOne(transactionline => transactionline.Transaction).HasForeignKey(transaction => transaction.Id).IsRequired();
         }
     }
 }

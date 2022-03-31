@@ -165,10 +165,7 @@ namespace CoffeeShop.EF.Migrations
             modelBuilder.Entity("CoffeeShop.Model.TransactionLine", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -191,8 +188,6 @@ namespace CoffeeShop.EF.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductID");
-
-                    b.HasIndex("TransactionID");
 
                     b.ToTable("TransactionLine");
                 });
@@ -229,15 +224,15 @@ namespace CoffeeShop.EF.Migrations
 
             modelBuilder.Entity("CoffeeShop.Model.TransactionLine", b =>
                 {
-                    b.HasOne("CoffeeShop.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
+                    b.HasOne("CoffeeShop.Model.Transaction", "Transaction")
+                        .WithMany("TransactionLines")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeShop.Model.Transaction", "Transaction")
-                        .WithMany("TransactionLines")
-                        .HasForeignKey("TransactionID")
+                    b.HasOne("CoffeeShop.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
