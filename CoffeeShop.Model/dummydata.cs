@@ -34,8 +34,8 @@ namespace CoffeeShop.Model
             p2.Code = "frapes";
             p1.Price = 234234;
             p2.Price = 50;
-            p2.ProducyCategoryID = 99;
-            p1.ProducyCategoryID = 99;
+            p2.ProductCategoryID = 99;
+            p1.ProductCategoryID = 99;
 
             /*var x = new ProductCategory();
 
