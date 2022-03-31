@@ -23,7 +23,7 @@ namespace CoffeeShop.Model
         public PaymentMethodEnum PaymentMethod { get; set; }
 
         // Entity Framework
-        public List<TransactionLine> TransactionLines { get; set; }
+        public List<TransactionLine> TransactionLines { get; set; }//xreiazete
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
 

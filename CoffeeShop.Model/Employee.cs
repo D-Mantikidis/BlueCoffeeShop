@@ -13,6 +13,7 @@ namespace CoffeeShop.Model
 
         public decimal SalaryPerMonth { get; set; }
         public EmployeeType EmployeeType { get; set; }
+        public List<Transaction> Transactions { get; set; }
         public Employee()
         {
 

@@ -20,5 +20,6 @@ namespace CoffeeShop.Model
         public decimal Total { get; set; }
 
 
+
     }
 }
