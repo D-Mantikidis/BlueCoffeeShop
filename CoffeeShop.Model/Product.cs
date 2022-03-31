@@ -10,11 +10,14 @@ namespace CoffeeShop.Model
     {
         public int ProducyCategoryID { get; set; }
         public decimal Price { get; set; }
+        public decimal Cost { get; set; }
 
+        // Entity Framework
+        public ProductCategory ProductCategory { get; set; }
 
         public Product()
         {
-
+            ProductCategory = new ProductCategory();
         }
     }
 }

@@ -10,9 +10,12 @@ namespace CoffeeShop.Model
     {
         public ProductTypeEnum ProductType { get; set; }
 
+        // Entity Framework
+        public List<Product> Products { get; set; }
+
         public ProductCategory()
         {
-
+            Products = new List<Product>();
         }
     }
 }
