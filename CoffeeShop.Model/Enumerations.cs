@@ -12,6 +12,4 @@ namespace CoffeeShop.Model
         Beverages,
         Food
     }
-
-    public
 }
