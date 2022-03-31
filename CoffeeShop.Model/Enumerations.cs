@@ -12,4 +12,18 @@ namespace CoffeeShop.Model
         Beverages,
         Food
     }
+
+    public enum PaymentMethodEnum
+    {
+        Cash,
+        Credit_Card
+    }
+
+    public enum EmployeeType
+    {
+        Manager,
+        Cashier,
+        Barista,
+        Waiter
+    }
 }
