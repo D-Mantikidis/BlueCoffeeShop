@@ -10,12 +10,19 @@ namespace CoffeeShop.Model
     {
         public TransactionLine()
         {
-
+            Transaction = new Transaction();
+            Product = new Product();
         }
+
         public int ProductID { get; set; }
         public int Qty { get; set; }
         public decimal Price { get; set; }
         public decimal Discount { get; set; }
         public decimal TotalPrice { get; set; }
+
+        // Entity Framework
+        public int TransactionID { get; set; }
+        public Transaction Transaction { get; set; }
+        public Product Product { get; set; }
     }
 }
