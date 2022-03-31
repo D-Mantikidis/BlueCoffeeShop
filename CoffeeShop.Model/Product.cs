@@ -8,7 +8,7 @@ namespace CoffeeShop.Model
 {
     public class Product : ProductEntity
     {
-        public int ProducyCategoryID { get; set; }
+        public int ProductCategoryID { get; set; }
         public decimal Price { get; set; }
         public decimal Cost { get; set; }
 
