@@ -13,7 +13,7 @@ namespace CoffeeShop.EF.Configuration
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.ToTable("Customer")
+            builder.ToTable("Customer");
         }
     }
 }
