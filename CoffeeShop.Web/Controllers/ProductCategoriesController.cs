@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Web.Models;
 
 namespace CoffeeShop.Web.Controllers
 {
     public class ProductCategoriesController : Controller
     {
         private readonly CoffeeShopContext _context;
+        private readonly IEntityRepo<ProductCategory> _productCategoryRepo;
 
-        public ProductCategoriesController(CoffeeShopContext context)
+        public ProductCategoriesController(IEntityRepo<ProductCategory> productCategory)
         {
-            _context = context;
+            _productCategoryRepo = productCategory;
         }
 
         // GET: ProductCategories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductCategories.ToListAsync());
+            return View(await _productCategoryRepo.GetAllAsync());
         }
 
         // GET: ProductCategories/Details/5
@@ -34,14 +37,21 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.ProductCategories
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var productCategory = await _productCategoryRepo.GetByIdAsync(id.Value);
+                
             if (productCategory == null)
             {
                 return NotFound();
             }
+            var viewModel = new ProductCategoryListViewModel()
+            {
+                Id=productCategory.Id,
+                ProductType = productCategory.ProductType,
+                Code=productCategory.Code,
+                Description=productCategory.Description
 
-            return View(productCategory);
+            };
+            return View(viewModel);
         }
 
         // GET: ProductCategories/Create
@@ -55,12 +65,18 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductType,Code,Description,Id")] ProductCategory productCategory)
+        public async Task<IActionResult> Create([Bind("ProductType,Code,Description")] ProductCategory productCategory)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(productCategory);
-                await _context.SaveChangesAsync();
+                var newProductCategory = new ProductCategory()
+                {
+                    ProductType = productCategory.ProductType,
+                    Code = productCategory.Code,
+                    Description = productCategory.Description
+
+                };
+                await _productCategoryRepo.Create(newProductCategory);
                 return RedirectToAction(nameof(Index));
             }
             return View(productCategory);
