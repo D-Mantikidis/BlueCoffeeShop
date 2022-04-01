@@ -43,7 +43,7 @@ namespace CoffeeShop.Web.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new ProductCategoryListViewModel()
+            var viewModel = new ProductCategoryListViewModel
             {
                 Id=productCategory.Id,
                 ProductType = productCategory.ProductType,
@@ -65,21 +65,21 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductType,Code,Description")] ProductCategory productCategory)
+        public async Task<IActionResult> Create([Bind("ProductType,Code,Description")] ProductCategoryCreateViewModel productCategoryViewModel)
         {
             if (ModelState.IsValid)
             {
                 var newProductCategory = new ProductCategory()
                 {
-                    ProductType = productCategory.ProductType,
-                    Code = productCategory.Code,
-                    Description = productCategory.Description
+                    ProductType = productCategoryViewModel.ProductType,
+                    Code = productCategoryViewModel.Code,
+                    Description = productCategoryViewModel.Description
 
                 };
                 await _productCategoryRepo.Create(newProductCategory);
                 return RedirectToAction(nameof(Index));
             }
-            return View(productCategory);
+            return View(productCategoryViewModel);
         }
 
         // GET: ProductCategories/Edit/5
@@ -90,12 +90,18 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.ProductCategories.FindAsync(id);
+            var productCategory = await _productCategoryRepo.GetByIdAsync(id.Value);
             if (productCategory == null)
             {
                 return NotFound();
             }
-            return View(productCategory);
+            var updateProductCategory = new ProductCategoryUpdateViewModel
+            {
+                ProductType = productCategory.ProductType,
+                Code = productCategory.Code,
+                Description = productCategory.Description
+            };
+            return View(updateProductCategory);
         }
 
         // POST: ProductCategories/Edit/5
@@ -103,34 +109,25 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductType,Code,Description,Id")] ProductCategory productCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductType,Code,Description,Id")] ProductCategoryUpdateViewModel productCategoryUpdateViewModel)
         {
-            if (id != productCategory.Id)
+            if (id != productCategoryUpdateViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(productCategory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductCategoryExists(productCategory.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var currentProductCategory = await _productCategoryRepo.GetByIdAsync(id);
+                if (currentProductCategory == null)
+                    return BadRequest();
+                currentProductCategory.Code = productCategoryUpdateViewModel.Code;
+                currentProductCategory.Description = productCategoryUpdateViewModel.Description;
+                _productCategoryRepo.Update(id, currentProductCategory);
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(productCategory);
+            return View(productCategoryUpdateViewModel);
         }
 
         // GET: ProductCategories/Delete/5
@@ -141,14 +138,22 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var productCategory = await _context.ProductCategories
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var productCategory = await _productCategoryRepo.GetByIdAsync(id.Value);
+               
             if (productCategory == null)
             {
                 return NotFound();
             }
+            var viewModel = new ProductCategoryDeleteViewModel
+            {
+                Id = productCategory.Id,
+                ProductType = productCategory.ProductType,
+                Code = productCategory.Code,
+                Description = productCategory.Description
 
-            return View(productCategory);
+            };
+
+            return View(viewModel);
         }
 
         // POST: ProductCategories/Delete/5
@@ -156,9 +161,8 @@ namespace CoffeeShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productCategory = await _context.ProductCategories.FindAsync(id);
-            _context.ProductCategories.Remove(productCategory);
-            await _context.SaveChangesAsync();
+           
+            await _productCategoryRepo.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
