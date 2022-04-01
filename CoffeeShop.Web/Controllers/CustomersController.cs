@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Web.Models;
 
 namespace CoffeeShop.Web
 {
     public class CustomersController : Controller
     {
         private readonly CoffeeShopContext _context;
+        private readonly IEntityRepo<Customer> _customerRepo;
 
-        public CustomersController(CoffeeShopContext context)
+        public CustomersController(IEntityRepo<Customer> customerRepo)
         {
-            _context = context;
+            _customerRepo = customerRepo;
         }
 
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            return View(await _customerRepo.GetAllAsync());
         }
 
         // GET: Customers/Details/5
@@ -34,14 +37,20 @@ namespace CoffeeShop.Web
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customerRepo.GetByIdAsync(id.Value);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            var viewModel = new CustomerListViewModel
+            {
+                Id = customer.Id,
+                Code = customer.Code,
+                Description = customer.Description
+            };
+
+            return View(viewModel);
         }
 
         // GET: Customers/Create
@@ -55,15 +64,21 @@ namespace CoffeeShop.Web
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Code,Description,Id")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Code,Description")] CustomerCreateViewModel customerViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                var newCustomer = new Customer()
+                {
+                    Code = customerViewModel.Code,
+                    Description = customerViewModel.Description
+
+                };
+
+                await _customerRepo.Create(newCustomer);
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(customerViewModel);
         }
 
         // GET: Customers/Edit/5
@@ -74,12 +89,19 @@ namespace CoffeeShop.Web
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _customerRepo.GetByIdAsync(id.Value);
             if (customer == null)
             {
                 return NotFound();
             }
-            return View(customer);
+
+            var updateCustomer = new CustomerUpdateViewModel
+            {
+                Code = customer.Code,
+                Description = customer.Description
+            };
+
+            return View(updateCustomer);
         }
 
         // POST: Customers/Edit/5
@@ -87,34 +109,24 @@ namespace CoffeeShop.Web
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Code,Description,Id")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Code,Description,Id")] CustomerUpdateViewModel customerViewModel)
         {
-            if (id != customer.Id)
+            if (id != customerViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomerExists(customer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var currentCustomer = await _customerRepo.GetByIdAsync(id);
+                if (currentCustomer == null)
+                    return BadRequest();
+                currentCustomer.Code = customerViewModel.Code;
+                currentCustomer.Description = customerViewModel.Description;
+                _customerRepo.Update(id, currentCustomer);
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(customerViewModel);
         }
 
         // GET: Customers/Delete/5
@@ -125,14 +137,20 @@ namespace CoffeeShop.Web
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _customerRepo.GetByIdAsync(id.Value);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            var viewModel = new CustomerDeleteViewModel
+            {
+                Code = customer.Code,
+                Id = customer.Id,
+                Description = customer.Description
+            };
+
+            return View(viewModel);
         }
 
         // POST: Customers/Delete/5
@@ -140,15 +158,9 @@ namespace CoffeeShop.Web
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            await _customerRepo.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.Id == id);
-        }
     }
 }

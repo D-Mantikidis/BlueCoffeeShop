@@ -1,10 +1,18 @@
 using CoffeeShop.EF.Context;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CoffeeShopContext>();
+builder.Services.AddScoped<IEntityRepo<Customer>, CustomerRepo>();
+builder.Services.AddScoped<IEntityRepo<Employee>, EmployeeRepo>();
+builder.Services.AddScoped<IEntityRepo<Product>, ProductRepo>();
+builder.Services.AddScoped<IEntityRepo<Transaction>, TransactionRepo>();
+builder.Services.AddScoped<IEntityRepo<ProductCategory>, ProductCategoryRepo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -28,7 +28,7 @@ namespace CoffeeShop.EF.Repositories
         {
             
             var foundTransaction = _context.Transactions.SingleOrDefault(transaction => transaction.Id == id);
-            if (foundTransaction != null)
+            if (foundTransaction == null)
                 return;
             _context.Transactions.Remove(foundTransaction);
             await _context.SaveChangesAsync();
