@@ -28,7 +28,7 @@ namespace CoffeeShop.EF.Repositories
         {
             //using var context = new CoffeeShopContext();
             var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
-            if (foundProduct != null)
+            if (foundProduct == null)
                 return;
             _context.Products.Remove(foundProduct);
             await _context.SaveChangesAsync();

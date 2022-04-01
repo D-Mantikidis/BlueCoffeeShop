@@ -27,7 +27,7 @@ namespace CoffeeShop.EF.Repositories
         public async Task Delete(int id)
         {
             var foundCustomer = _context.Customers.SingleOrDefault(customer => customer.Id == id);
-            if (foundCustomer != null)
+            if (foundCustomer == null)
                 return;
             _context.Customers.Remove(foundCustomer);
             await _context.SaveChangesAsync();

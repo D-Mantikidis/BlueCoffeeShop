@@ -25,7 +25,7 @@ namespace CoffeeShop.EF.Repositories
         public async Task Delete(int id)
         {
             var foundEmployee = _context.Employees.SingleOrDefault(employee => employee.Id == id);
-            if (foundEmployee != null)
+            if (foundEmployee == null)
                 return;
             _context.Employees.Remove(foundEmployee);
             await _context.SaveChangesAsync();

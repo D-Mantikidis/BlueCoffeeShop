@@ -27,7 +27,7 @@ namespace CoffeeShop.EF.Repositories
         public async Task Delete(int id)
         {
             var foundProductCategory = _context.ProductCategories.SingleOrDefault(product => product.Id == id);
-            if (foundProductCategory != null)
+            if (foundProductCategory == null)
                 return;
             _context.ProductCategories.Remove(foundProductCategory);
             await _context.SaveChangesAsync();
