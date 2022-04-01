@@ -53,7 +53,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task<Product?> GetByIdAsync(int id)
         {
-            return await _context.Products.SingleOrDefaultAsync(customer => customer.Id == id)
+            return await _context.Products.SingleOrDefaultAsync(customer => customer.Id == id);
         }
 
         public async Task Update(int id, Product entity)
