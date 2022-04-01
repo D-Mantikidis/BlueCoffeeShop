@@ -10,6 +10,7 @@ using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Web.Models;
+using System.Collections;
 
 namespace CoffeeShop.Web.Controllers
 {
@@ -17,10 +18,12 @@ namespace CoffeeShop.Web.Controllers
     {
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<Product> _productRepo;
+        //private readonly IEntityRepo<ProductCategory> _productCategoryRepo;
 
-        public ProductsController(IEntityRepo<Product> productRepo)
+        public ProductsController(IEntityRepo<Product> productRepo, IEntityRepo<ProductCategory> productCategoryRepo)
         {
             _productRepo = productRepo;
+            //_productCategoryRepo = productCategoryRepo;
         }
 
         // GET: Products
@@ -59,6 +62,8 @@ namespace CoffeeShop.Web.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            
+            //ViewData["ProductCategoryID"] = new SelectList((IEnumerable)_productCategoryRepo.GetAllAsync(), "Id", "Description");
             return View();
         }
 

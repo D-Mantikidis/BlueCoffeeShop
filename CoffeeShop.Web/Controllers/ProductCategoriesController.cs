@@ -10,6 +10,7 @@ using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Web.Models;
+using CoffeeShop.Model.Handlers;
 
 namespace CoffeeShop.Web.Controllers
 {
@@ -17,10 +18,12 @@ namespace CoffeeShop.Web.Controllers
     {
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<ProductCategory> _productCategoryRepo;
+        private EnumsHandler _enumsHandler;
 
         public ProductCategoriesController(IEntityRepo<ProductCategory> productCategory)
         {
             _productCategoryRepo = productCategory;
+            _enumsHandler = new EnumsHandler();
         }
 
         // GET: ProductCategories
@@ -57,6 +60,7 @@ namespace CoffeeShop.Web.Controllers
         // GET: ProductCategories/Create
         public IActionResult Create()
         {
+            ViewData["ProductCategoryList"] = new SelectList(_enumsHandler.GetProductTypeEnumList(), "ID", "Name");
             return View();
         }
 
