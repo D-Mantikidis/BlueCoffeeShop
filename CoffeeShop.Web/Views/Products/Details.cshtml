@@ -1,4 +1,4 @@
-﻿@model CoffeeShop.Model.Product
+﻿@model ProductListViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -27,12 +27,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Cost)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductCategory.Code)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Code)
