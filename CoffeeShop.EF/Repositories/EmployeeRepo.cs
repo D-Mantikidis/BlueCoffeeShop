@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,56 +11,57 @@ namespace CoffeeShop.EF.Repositories
 {
     public class EmployeeRepo : IEntityRepo<Employee>
     {
-        public async Task Create(Employee entity)
+        private readonly CoffeeShopContext _context;
+        public EmployeeRepo(CoffeeShopContext context)
         {
-            using var context = new CoffeeShopContext();
-            context.Employees.Add(entity);
-            await context.SaveChangesAsync();
+            _context = context;
+        }
+        public async Task Create(Employee entity)
+        { 
+            _context.Employees.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            using var context = new CoffeeShopContext();
-            var foundEmployee = context.Employees.SingleOrDefault(employee => employee.Id == id);
+            var foundEmployee = _context.Employees.SingleOrDefault(employee => employee.Id == id);
             if (foundEmployee != null)
                 return;
-            context.Employees.Remove(foundEmployee);
-            await context.SaveChangesAsync();
+            _context.Employees.Remove(foundEmployee);
+            await _context.SaveChangesAsync();
         }
 
         public List<Employee> GetAll()
         {
-            using var context = new CoffeeShopContext();
-            return context.Employees.ToList();
+            return _context.Employees.ToList();
         }
 
-        public Task<IEnumerable<Employee>> GetAllAsync()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Employees.ToListAsync();
         }
 
         public Employee? GetById(int id)
         {
-            using var context = new CoffeeShopContext();
-            return context.Employees.Where(employee => employee.Id == id).SingleOrDefault();
+            
+            return _context.Employees.Where(employee => employee.Id == id).SingleOrDefault();
         }
 
-        public Task<Employee?> GetByIdAsync(int id)
+        public async Task<Employee?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Employees.Where(employee => employee.Id == id).SingleOrDefaultAsync();
         }
 
         public async Task Update(int id, Employee entity)
         {
-            using var context = new CoffeeShopContext();
-            var foundEmployee = context.Employees.SingleOrDefault(employee => employee.Id == id);
+            var foundEmployee = _context.Employees.SingleOrDefault(employee => employee.Id == id);
             if (foundEmployee is null)
                 return;
             foundEmployee.Name = entity.Name;
             foundEmployee.Surname = entity.Surname;
             foundEmployee.EmployeeType = entity.EmployeeType;
             foundEmployee.SalaryPerMonth = entity.SalaryPerMonth;
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
