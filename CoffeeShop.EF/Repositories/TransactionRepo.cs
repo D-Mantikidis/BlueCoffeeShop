@@ -34,10 +34,20 @@ namespace CoffeeShop.EF.Repositories
             return context.Transactions.Include(transaction => transaction.TransactionLines).ToList();
         }
 
+        public Task<IEnumerable<Transaction>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Transaction? GetById(int id)
         {
             using var context = new CoffeeShopContext();
             return context.Transactions.Where(transaction => transaction.Id == id).SingleOrDefault();
+        }
+
+        public Task<Transaction?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Update(int id, Transaction entity)

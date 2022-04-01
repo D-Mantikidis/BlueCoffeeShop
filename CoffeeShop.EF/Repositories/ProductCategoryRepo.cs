@@ -33,10 +33,20 @@ namespace CoffeeShop.EF.Repositories
             return context.ProductCategories.ToList();
         }
 
+        public Task<IEnumerable<ProductCategory>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public ProductCategory? GetById(int id)
         {
             using var context = new CoffeeShopContext();
             return context.ProductCategories.Where(product => product.Id == id).SingleOrDefault();
+        }
+
+        public Task<ProductCategory?> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Update(int id, ProductCategory entity)
