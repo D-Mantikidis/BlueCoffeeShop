@@ -1,5 +1,6 @@
 ﻿using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,43 +11,49 @@ namespace CoffeeShop.EF.Repositories
 {
     public class ProductRepo : IEntityRepo<Product>
     {
+        private readonly CoffeeShopContext _context;
+
+        public ProductRepo(CoffeeShopContext context)
+        {
+            _context = context;
+        }
         public async Task Create(Product entity)
         {
-            using var context = new CoffeeShopContext();
-            context.Products.Add(entity);
-            await context.SaveChangesAsync();
+            //using var context = new CoffeeShopContext();
+            _context.Products.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            using var context = new CoffeeShopContext();
-            var foundProduct = context.Products.SingleOrDefault(product => product.Id == id);
+            //using var context = new CoffeeShopContext();
+            var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
             if (foundProduct != null)
                 return;
-            context.Products.Remove(foundProduct);
-            await context.SaveChangesAsync();
+            _context.Products.Remove(foundProduct);
+            await _context.SaveChangesAsync();
         }
 
         public List<Product> GetAll()
         {
-            using var context = new CoffeeShopContext();
-            return context.Products.ToList();
+            //using var context = new CoffeeShopContext();
+            return _context.Products.ToList();
         }
 
-        public Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Products.ToListAsync(); ;
         }
 
         public Product? GetById(int id)
         {
-            using var context = new CoffeeShopContext();
-            return context.Products.Where(product => product.Id == id).SingleOrDefault();
+            //using var context = new CoffeeShopContext();
+            return _context.Products.Where(product => product.Id == id).SingleOrDefault();
         }
 
-        public Task<Product?> GetByIdAsync(int id)
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Products.SingleOrDefaultAsync(customer => customer.Id == id)
         }
 
         public async Task Update(int id, Product entity)
