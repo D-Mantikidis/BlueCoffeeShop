@@ -11,49 +11,56 @@ namespace CoffeeShop.EF.Repositories
 {
     public class TransactionRepo : IEntityRepo<Transaction>
     {
+        private readonly CoffeeShopContext _context;
+        public TransactionRepo(CoffeeShopContext context)
+        {
+            _context = context;
+
+        }
         public async Task Create(Transaction entity)
         {
-            using var context = new CoffeeShopContext();
-            context.Transactions.Add(entity);
-            await context.SaveChangesAsync();
+           
+            _context.Transactions.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            using var context = new CoffeeShopContext();
-            var foundTransaction = context.Transactions.SingleOrDefault(transaction => transaction.Id == id);
+            
+            var foundTransaction = _context.Transactions.SingleOrDefault(transaction => transaction.Id == id);
             if (foundTransaction != null)
                 return;
-            context.Transactions.Remove(foundTransaction);
-            await context.SaveChangesAsync();
+            _context.Transactions.Remove(foundTransaction);
+            await _context.SaveChangesAsync();
         }
 
         public List<Transaction> GetAll()
         {
-            using var context = new CoffeeShopContext();
-            return context.Transactions.Include(transaction => transaction.TransactionLines).ToList();
+            
+            return _context.Transactions.Include(transaction => transaction.TransactionLines).ToList();
         }
 
-        public Task<IEnumerable<Transaction>> GetAllAsync()
+        public async Task<IEnumerable<Transaction>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Transactions.Include(transaction => transaction.TransactionLines).ToListAsync();
         }
 
         public Transaction? GetById(int id)
         {
-            using var context = new CoffeeShopContext();
-            return context.Transactions.Where(transaction => transaction.Id == id).SingleOrDefault();
+            
+            return _context.Transactions.Where(transaction => transaction.Id == id).SingleOrDefault();
         }
 
-        public Task<Transaction?> GetByIdAsync(int id)
+        public async Task<Transaction?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await  _context.Transactions.SingleOrDefaultAsync(transaction => transaction.Id == id);
         }
+    
 
         public async Task Update(int id, Transaction entity)
         {
-            using var context = new CoffeeShopContext();
-            var foundTransaction = context.Transactions.Include(transaction => transaction.TransactionLines).SingleOrDefault(transaction => transaction.Id == id);
+            
+            var foundTransaction = _context.Transactions.Include(transaction => transaction.TransactionLines).SingleOrDefault(transaction => transaction.Id == id);
             if (foundTransaction is null)
                 return;
             foundTransaction.Date = entity.Date;
@@ -62,7 +69,7 @@ namespace CoffeeShop.EF.Repositories
             foundTransaction.PaymentMethod = entity.PaymentMethod;
             foundTransaction.TotalPrice = entity.TotalPrice;
             foundTransaction.TransactionLines = entity.TransactionLines;
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }
