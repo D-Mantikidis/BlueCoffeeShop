@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Web.Models;
 
 namespace CoffeeShop.Web.Controllers
 {
     public class EmployeesController : Controller
     {
         private readonly CoffeeShopContext _context;
+        private readonly IEntityRepo<Employee> _employeeRepo;
 
-        public EmployeesController(CoffeeShopContext context)
+        public EmployeesController(IEntityRepo<Employee> employeeRepo)
         {
-            _context = context;
+            _employeeRepo = employeeRepo;
         }
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(await _employeeRepo.GetAllAsync());
         }
 
         // GET: Employees/Details/5
@@ -34,14 +37,21 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value);
             if (employee == null)
             {
                 return NotFound();
             }
+            var employeeViewModel = new EmployeeListViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Surname = employee.Surname,
+                SalaryPerMonth = employee.SalaryPerMonth,
+                EmployeeType = employee.EmployeeType
+            };
 
-            return View(employee);
+            return View(employeeViewModel);
         }
 
         // GET: Employees/Create
@@ -55,15 +65,19 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Surname,SalaryPerMonth,EmployeeType,Id")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Name,Surname,SalaryPerMonth,EmployeeType")] EmployeeCreateViewModel employeeViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var newEmployee = new Employee()
+                {
+                    Name = employeeViewModel.Name,
+                    Surname = employeeViewModel.Surname,
+                    SalaryPerMonth = employeeViewModel.SalaryPerMonth,
+                    EmployeeType = employeeViewModel.EmployeeType
+                };
             }
-            return View(employee);
+            return View(employeeViewModel);
         }
 
         // GET: Employees/Edit/5
