@@ -2,5 +2,10 @@
 {
     public class TransactionViewModels
     {
+        public TransactionViewModels()
+        {
+
+        }
+
     }
 }
