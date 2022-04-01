@@ -8,23 +8,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Web.Models;
 
 namespace CoffeeShop.Web.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly CoffeeShopContext _context;
+        private readonly IEntityRepo<Product> _productRepo;
 
-        public ProductsController(CoffeeShopContext context)
+        public ProductsController(IEntityRepo<Product> productRepo)
         {
-            _context = context;
+            _productRepo = productRepo;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var coffeeShopContext = _context.Products.Include(p => p.ProductCategory);
-            return View(await coffeeShopContext.ToListAsync());
+            return View(await _productRepo.GetAllAsync());
         }
 
         // GET: Products/Details/5
@@ -35,21 +37,28 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.ProductCategory)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _productRepo.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
             }
+            var viewModel = new ProductListViewModel()
+            {
+                Id = product.Id,
+                Price = product.Price,
+                Code = product.Code,
+                Cost = product.Cost,
+                Description = product.Description,
+                ProductCategoryID = product.ProductCategory.Description
+                
+            };
 
-            return View(product);
+            return View(viewModel);
         }
 
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["Id"] = new SelectList(_context.ProductCategories, "Id", "Code");
             return View();
         }
 
@@ -58,16 +67,22 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductCategoryID,Price,Cost,Code,Description,Id")] Product product)
+        public async Task<IActionResult> Create([Bind("Price,Cost,Code,Description")] ProductCreateViewModel productCreateViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                var newProduct = new Product()
+                {
+                    Price = productCreateViewModel.Price,
+                    Cost = productCreateViewModel.Cost,
+                    Code = productCreateViewModel.Code,
+                    Description = productCreateViewModel.Description
+                };
+                await _productRepo.Create(newProduct);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.ProductCategories, "Id", "Code", product.Id);
-            return View(product);
+            
+            return View(productCreateViewModel);
         }
 
         // GET: Products/Edit/5
@@ -78,13 +93,21 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productRepo.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
             }
-            ViewData["Id"] = new SelectList(_context.ProductCategories, "Id", "Code", product.Id);
-            return View(product);
+            var updateProduct = new ProductUpdateViewModel()
+            {
+                Code = product.Code,
+                Description= product.Description,
+                Cost = product.Cost,
+                Id = product.Id,
+                Price= product.Price,
+            };
+
+            return View(updateProduct);
         }
 
         // POST: Products/Edit/5
@@ -92,35 +115,28 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductCategoryID,Price,Cost,Code,Description,Id")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductCategoryID,Price,Cost,Code,Description,Id")] ProductUpdateViewModel productUpdateViewModel)
         {
-            if (id != product.Id)
+            if (id != productUpdateViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var currentProduct = await _productRepo.GetByIdAsync(id);
+                if (currentProduct == null)
+                    return BadRequest();
+                currentProduct.Price = productUpdateViewModel.Price;
+                currentProduct.Description = productUpdateViewModel.Description;
+                currentProduct.Cost = productUpdateViewModel.Cost;
+                currentProduct.Id = productUpdateViewModel.Id;  
+                currentProduct.Code = productUpdateViewModel.Code;
+                _productRepo.Update(id, currentProduct);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.ProductCategories, "Id", "Code", product.Id);
-            return View(product);
+            
+            return View(productUpdateViewModel);
         }
 
         // GET: Products/Delete/5
@@ -131,15 +147,21 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.ProductCategory)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _productRepo.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
             }
+            var viewModel = new ProductDeleteViewModel()
+            {
+                Code = product.Code,
+                Price = product.Price,
+                Cost = product.Cost,
+                Id = product.Id,
+                Description= product.Description,
+            };
 
-            return View(product);
+            return View(viewModel);
         }
 
         // POST: Products/Delete/5
@@ -147,15 +169,8 @@ namespace CoffeeShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            await _productRepo.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.Id == id);
         }
     }
 }

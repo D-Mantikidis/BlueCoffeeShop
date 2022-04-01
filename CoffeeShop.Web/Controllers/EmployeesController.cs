@@ -88,12 +88,19 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value);
             if (employee == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            var updateEmployee = new EmployeeUpdateViewModel
+            {
+                Name = employee.Name,
+                Surname = employee.Surname,
+                SalaryPerMonth = employee.SalaryPerMonth,
+                EmployeeType = employee.EmployeeType
+            };
+            return View(updateEmployee);
         }
 
         // POST: Employees/Edit/5
@@ -101,34 +108,26 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,SalaryPerMonth,EmployeeType,Id")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,SalaryPerMonth,EmployeeType,Id")] EmployeeUpdateViewModel employeeViewModel)
         {
-            if (id != employee.Id)
+            if (id != employeeViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var currentEmployee = await _employeeRepo.GetByIdAsync(id);
+                if (currentEmployee == null)
+                    return BadRequest();
+                currentEmployee.Name = employeeViewModel.Name;
+                currentEmployee.Surname = employeeViewModel.Surname;
+                currentEmployee.SalaryPerMonth = employeeViewModel.SalaryPerMonth;
+                currentEmployee.EmployeeType = employeeViewModel.EmployeeType;
+                _employeeRepo.Update(id, currentEmployee);
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(employeeViewModel);
         }
 
         // GET: Employees/Delete/5
@@ -139,14 +138,21 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value);
             if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            var employeeViewModel = new EmployeeDeleteViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Surname = employee.Surname,
+                SalaryPerMonth = employee.SalaryPerMonth,
+                EmployeeType = employee.EmployeeType
+            };
+            return View(employeeViewModel);
         }
 
         // POST: Employees/Delete/5
@@ -154,15 +160,13 @@ namespace CoffeeShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            await _employeeRepo.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
-        }
+        //private bool EmployeeExists(int id)
+        //{
+        //    return _context.Employees.Any(e => e.Id == id);
+        //}
     }
 }
