@@ -10,6 +10,7 @@ using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Web.Models;
+using CoffeeShop.Model.Handlers;
 
 namespace CoffeeShop.Web.Controllers
 {
@@ -17,10 +18,12 @@ namespace CoffeeShop.Web.Controllers
     {
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<Employee> _employeeRepo;
+        private EnumsHandler _enumshandler;
 
         public EmployeesController(IEntityRepo<Employee> employeeRepo)
         {
             _employeeRepo = employeeRepo;
+            _enumshandler = new EnumsHandler();
         }
 
         // GET: Employees
@@ -57,6 +60,7 @@ namespace CoffeeShop.Web.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            ViewData["EmployeeTypeList"] = new SelectList(_enumshandler.GetEmployeeEnumList(), "ID", "Name");
             return View();
         }
 
@@ -76,6 +80,10 @@ namespace CoffeeShop.Web.Controllers
                     SalaryPerMonth = employeeViewModel.SalaryPerMonth,
                     EmployeeType = employeeViewModel.EmployeeType
                 };
+
+                await _employeeRepo.Create(newEmployee);
+                return RedirectToAction(nameof(Index));
+
             }
             return View(employeeViewModel);
         }
