@@ -32,6 +32,12 @@ namespace CoffeeShop.Web.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
+            var a = await _productCategoryRepo.GetAllAsync();
+            
+            ViewData["ProductCategoryID"] = a;
+            
+    
+            
             return View(await _productRepo.GetAllAsync());
         }
 
@@ -79,11 +85,14 @@ namespace CoffeeShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
-                //var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
+                /*var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
+                var  productCategory = await _productCategoryRepo.GetByIdAsync(x);*/
                 
+
+
                 var newProduct = new Product()
                 {
+                    //Id=-productCategory.Id,
                     ProductCategoryID= Int32.Parse(productCreateViewModel.ProductCategoryID),
                     Price = productCreateViewModel.Price,
                     Cost = productCreateViewModel.Cost,
@@ -92,7 +101,9 @@ namespace CoffeeShop.Web.Controllers
                     //ProductCategory= productCategory
 
 
+
                 };
+                
                 await _productRepo.Create(newProduct);
                 return RedirectToAction(nameof(Index));
             }
