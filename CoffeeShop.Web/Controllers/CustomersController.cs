@@ -123,7 +123,7 @@ namespace CoffeeShop.Web
                     return BadRequest();
                 currentCustomer.Code = customerViewModel.Code;
                 currentCustomer.Description = customerViewModel.Description;
-                _customerRepo.Update(id, currentCustomer);
+                await _customerRepo.Update(id, currentCustomer);
                 return RedirectToAction(nameof(Index));
             }
             return View(customerViewModel);

@@ -132,7 +132,7 @@ namespace CoffeeShop.Web.Controllers
                 currentEmployee.Surname = employeeViewModel.Surname;
                 currentEmployee.SalaryPerMonth = employeeViewModel.SalaryPerMonth;
                 currentEmployee.EmployeeType = employeeViewModel.EmployeeType;
-                _employeeRepo.Update(id, currentEmployee);
+                await _employeeRepo.Update(id, currentEmployee);
                 return RedirectToAction(nameof(Index));
             }
             return View(employeeViewModel);
