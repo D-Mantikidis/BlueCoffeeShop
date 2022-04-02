@@ -11,6 +11,7 @@ using CoffeeShop.Model;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Web.Models;
 using System.Collections;
+using CoffeeShop.Model.Handlers;
 
 namespace CoffeeShop.Web.Controllers
 {
@@ -18,12 +19,14 @@ namespace CoffeeShop.Web.Controllers
     {
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<Product> _productRepo;
-        //private readonly IEntityRepo<ProductCategory> _productCategoryRepo;
+        private readonly IEntityRepo<ProductCategory> _productCategoryRepo;
+        
 
         public ProductsController(IEntityRepo<Product> productRepo, IEntityRepo<ProductCategory> productCategoryRepo)
         {
             _productRepo = productRepo;
-            //_productCategoryRepo = productCategoryRepo;
+            _productCategoryRepo = productCategoryRepo;
+           
         }
 
         // GET: Products
@@ -60,10 +63,10 @@ namespace CoffeeShop.Web.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            
-            //ViewData["ProductCategoryID"] = new SelectList((IEnumerable)_productCategoryRepo.GetAllAsync(), "Id", "Description");
+            var a = await _productCategoryRepo.GetAllAsync();
+            ViewData["ProductCategoryID"] = new SelectList( a, "Id", "Description");
             return View();
         }
 
