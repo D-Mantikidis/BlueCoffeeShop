@@ -19,14 +19,12 @@ namespace CoffeeShop.EF.Repositories
         }
         public async Task Create(Product entity)
         {
-            //using var context = new CoffeeShopContext();
             _context.Products.Add(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            //using var context = new CoffeeShopContext();
             var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
             if (foundProduct == null)
                 return;
@@ -36,7 +34,6 @@ namespace CoffeeShop.EF.Repositories
 
         public List<Product> GetAll()
         {
-            //using var context = new CoffeeShopContext();
             return _context.Products.ToList();
         }
 
@@ -47,19 +44,17 @@ namespace CoffeeShop.EF.Repositories
 
         public Product? GetById(int id)
         {
-            //using var context = new CoffeeShopContext();
             return _context.Products.Where(product => product.Id == id).SingleOrDefault();
         }
 
         public async Task<Product?> GetByIdAsync(int id)
         {
-            return await _context.Products.SingleOrDefaultAsync(customer => customer.Id == id);
+            return await _context.Products.SingleOrDefaultAsync(prodoct => prodoct.Id == id);
         }
 
         public async Task Update(int id, Product entity)
         {
-            using var context = new CoffeeShopContext();
-            var foundProduct = context.Products.SingleOrDefault(product => product.Id == id);
+            var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
             if (foundProduct is null)
                 return;
             foundProduct.Code = entity.Code;
@@ -67,7 +62,7 @@ namespace CoffeeShop.EF.Repositories
             foundProduct.ProductCategoryID = entity.ProductCategoryID;
             foundProduct.Price = entity.Price;
             foundProduct.Cost = entity.Cost;
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -87,7 +87,8 @@ namespace CoffeeShop.EF.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ProductCategoryID = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -98,8 +99,8 @@ namespace CoffeeShop.EF.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Product_ProductCategory_Id",
-                        column: x => x.Id,
+                        name: "FK_Product_ProductCategory_ProductCategoryID",
+                        column: x => x.ProductCategoryID,
                         principalTable: "ProductCategory",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -133,6 +134,11 @@ namespace CoffeeShop.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Product_ProductCategoryID",
+                table: "Product",
+                column: "ProductCategoryID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_CustomerID",

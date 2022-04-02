@@ -75,7 +75,7 @@ namespace CoffeeShop.Web.Controllers
             {
                 var newProductCategory = new ProductCategory()
                 {
-                    ProductType = productCategoryViewModel.ProductType,
+                    ProductType = (ProductTypeEnum)productCategoryViewModel.ProductType,
                     Code = productCategoryViewModel.Code,
                     Description = productCategoryViewModel.Description
 

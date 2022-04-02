@@ -19,16 +19,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategoryID)
+                @Html.DisplayNameFor(model => model.ProductCategory)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Cost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductCategory)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Code)
@@ -43,16 +40,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductCategoryID)
+                @Html.DisplayFor(modelItem => item.ProductCategory.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductCategory.Code)@*ginete 0 apo to ctor kateuthian gia auto den pernei timews*@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Code)

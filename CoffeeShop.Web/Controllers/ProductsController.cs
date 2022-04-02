@@ -66,7 +66,7 @@ namespace CoffeeShop.Web.Controllers
         public async Task<IActionResult> Create()
         {
             var a = await _productCategoryRepo.GetAllAsync();
-            ViewData["ProductCategoryID"] = new SelectList( a, "Id", "Description");
+            ViewData["ProductCategoryList"] = new SelectList( a, "Id", "Description");
             return View();
         }
 
@@ -79,17 +79,17 @@ namespace CoffeeShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
-                var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
+                //var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
+                //var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
                 
                 var newProduct = new Product()
                 {
-                    ProductCategoryID= Int32.Parse(productCreateViewModel.ProductCategoryID),
+                    ProductCategoryID = Int32.Parse(productCreateViewModel.ProductCategoryID),
                     Price = productCreateViewModel.Price,
                     Cost = productCreateViewModel.Cost,
                     Code = productCreateViewModel.Code,
                     Description = productCreateViewModel.Description,
-                    ProductCategory= productCategory
+                    //ProductCategory = productCategory
 
 
                 };

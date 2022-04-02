@@ -11,7 +11,7 @@ namespace CoffeeShop.Web.Models
     }
     public class ProductCategoryCreateViewModel
     {
-        public ProductTypeEnum ProductType { get; set; }
+        public int ProductType { get; set; }
        
         public string Code { get; set; }
         public string Description { get; set; }
