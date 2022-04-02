@@ -80,6 +80,8 @@ namespace CoffeeShop.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -100,6 +102,8 @@ namespace CoffeeShop.EF.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductCategoryID");
 
                     b.ToTable("Product", (string)null);
                 });
@@ -196,7 +200,7 @@ namespace CoffeeShop.EF.Migrations
                 {
                     b.HasOne("CoffeeShop.Model.ProductCategory", "ProductCategory")
                         .WithMany("Products")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductCategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
