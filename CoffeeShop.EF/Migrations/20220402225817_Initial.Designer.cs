@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeShop.EF.Migrations
 {
     [DbContext(typeof(CoffeeShopContext))]
-<<<<<<< HEAD:CoffeeShop.EF/Migrations/20220402213849_Initial.Designer.cs
-    [Migration("20220402213849_Initial")]
+    [Migration("20220402225817_Initial")]
     partial class Initial
-=======
-    [Migration("20220402221626_initial")]
-    partial class initial
->>>>>>> 04cf343c45968690b4eba69193f88db23c083dbd:CoffeeShop.EF/Migrations/20220402221626_initial.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
