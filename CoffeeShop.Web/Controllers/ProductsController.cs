@@ -75,7 +75,7 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Price,Cost,Code,Description")] ProductCreateViewModel productCreateViewModel)
+        public async Task<IActionResult> Create([Bind("Price,Cost,Code,Description,ProductCategoryID")] ProductCreateViewModel productCreateViewModel)
         {
             if (ModelState.IsValid)
             {
