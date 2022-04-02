@@ -16,7 +16,7 @@ namespace CoffeeShop.EF.Configuration
             builder.ToTable("Product");
             builder.HasKey(product => product.Id);
             builder.Property(product => product.Id).ValueGeneratedOnAdd();
-            builder.HasOne(product => product.ProductCategory).WithMany(productCategory => productCategory.Products).HasForeignKey(productCategory => productCategory.Id);
+            builder.HasOne(product => product.ProductCategory).WithMany(productCategory => productCategory.Products).HasForeignKey(product => product.Id);
             builder.Property(product => product.Code).HasMaxLength(30);
             builder.Property(product => product.Description).HasMaxLength(60);
         }
