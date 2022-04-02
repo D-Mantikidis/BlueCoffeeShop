@@ -53,7 +53,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task<Transaction?> GetByIdAsync(int id)
         {
-            return await  _context.Transactions.SingleOrDefaultAsync(transaction => transaction.Id == id);
+            return await  _context.Transactions.Include(x=>x.Customer).Include(x => x.Employee).SingleOrDefaultAsync(transaction => transaction.Id == id);
         }
     
 
