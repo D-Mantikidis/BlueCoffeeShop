@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<CoffeeShop.Model.Product>
 
 
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -52,7 +53,15 @@
                 @Html.DisplayFor(modelItem => item.Cost)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductCategory.Code)@*ginete 0 apo to ctor kateuthian gia auto den pernei timews*@
+               @foreach(var x in ViewBag.ProductCategoryID){
+                        if(x.Id == item.ProductCategoryID)
+                        {
+                            <p>@x.Description</p>;
+                        }
+
+
+               }
+                @*ginete 0 apo to ctor kateuthian gia auto den pernei timews*@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Code)
