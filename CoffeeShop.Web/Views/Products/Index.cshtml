@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<CoffeeShop.Model.Product>
 
+
 @{
     ViewData["Title"] = "Index";
 }
@@ -51,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.Cost)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductCategory.Code)
+                @Html.DisplayFor(modelItem => item.ProductCategory.Code)@*ginete 0 apo to ctor kateuthian gia auto den pernei timews*@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Code)

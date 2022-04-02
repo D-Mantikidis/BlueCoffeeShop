@@ -12,8 +12,8 @@ namespace CoffeeShop.Model
         {
             Date = DateTime.Now;
             TransactionLines = new List<TransactionLine>();
-            Customer = new Customer();
-            Employee = new Employee();
+           /* Customer = new Customer();
+            Employee = new Employee();*/
         }
 
         public DateTime Date { get; set; }

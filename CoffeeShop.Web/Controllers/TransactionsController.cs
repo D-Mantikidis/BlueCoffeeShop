@@ -8,23 +8,39 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
+using CoffeeShop.EF.Repositories;
+using CoffeeShop.Web.Models;
+using CoffeeShop.Model.Handlers;
 
 namespace CoffeeShop.Web.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly CoffeeShopContext _context;
+        private readonly IEntityRepo<Transaction> _transactionRepo;
+        private readonly IEntityRepo<Customer> _customerRepo;
+        private readonly IEntityRepo<Employee> _employeeRepo;
+        private EnumsHandler _enumsHandler;
 
-        public TransactionsController(CoffeeShopContext context)
+        public TransactionsController(IEntityRepo<Transaction> transactionRepo,
+            IEntityRepo<Employee> employeeRepo, IEntityRepo<Customer> customerRepo)
         {
-            _context = context;
+            _transactionRepo = transactionRepo;
+            _employeeRepo = employeeRepo;
+            _customerRepo = customerRepo;
+            _enumsHandler = new EnumsHandler();
+
+        }
+        public async Task<IActionResult> TransactionLineIndex()
+        {
+
+            return RedirectToAction("Index", "Customers");
         }
 
         // GET: Transactions
         public async Task<IActionResult> Index()
         {
-            var coffeeShopContext = _context.Transactions.Include(t => t.Customer).Include(t => t.Employee);
-            return View(await coffeeShopContext.ToListAsync());
+            return View(await _transactionRepo.GetAllAsync());
         }
 
         // GET: Transactions/Details/5
@@ -35,23 +51,34 @@ namespace CoffeeShop.Web.Controllers
                 return NotFound();
             }
 
-            var transaction = await _context.Transactions
-                .Include(t => t.Customer)
-                .Include(t => t.Employee)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var transaction = await _transactionRepo.GetByIdAsync(id.Value);
             if (transaction == null)
             {
                 return NotFound();
             }
+            var viewModel = new TransactionListViewModel
+            {
+                Id = transaction.Id,
+                Date = transaction.Date,
+                CustomerID = transaction.CustomerID,
+                EmployeeID = transaction.EmployeeID,
+                TransactionLines = transaction.TransactionLines,
+                TotalPrice = transaction.TotalPrice,
+                PaymentMethod = transaction.PaymentMethod
+            };
 
-            return View(transaction);
+            return View(viewModel);
         }
 
         // GET: Transactions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "Id", "Code");
-            ViewData["EmployeeID"] = new SelectList(_context.Employees, "Id", "Name");
+            var a = await _customerRepo.GetAllAsync();
+            var b = await _employeeRepo.GetAllAsync();
+            ViewData["CustomerID"] = new SelectList(a, "Id", "Description");
+            ViewData["EmployeeID"] = new SelectList(b, "Id", "Name");
+            
+            ViewData["PaymentMethod"] = new SelectList(_enumsHandler.GetPaymentEnumList(), "ID", "Name");
             return View();
         }
 
@@ -60,17 +87,29 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Date,CustomerID,EmployeeID,TotalPrice,PaymentMethod,Id")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("Date,CustomerID,EmployeeID,TotalPrice,PaymentMethod")] TransactionCreateViewModel transactionCreateViewModel)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(transaction);
-                await _context.SaveChangesAsync();
+            //if (ModelState.IsValid) SOSOSOSOS xreiazomaste transaction lines gia na trexei dld na einai  valid to modelstate
+            //{
+            
+                var newTransaction = new Transaction
+                {
+
+                    Date = transactionCreateViewModel.Date,
+                    CustomerID = transactionCreateViewModel.CustomerID,
+                    EmployeeID = transactionCreateViewModel.EmployeeID,
+                    TransactionLines = new Transaction().TransactionLines,
+                    TotalPrice = transactionCreateViewModel.TotalPrice,
+                    PaymentMethod = transactionCreateViewModel.PaymentMethod,
+                    Customer=null,
+                    Employee=null
+                };
+
+                await _transactionRepo.Create(newTransaction);
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "Id", "Code", transaction.CustomerID);
-            ViewData["EmployeeID"] = new SelectList(_context.Employees, "Id", "Name", transaction.EmployeeID);
-            return View(transaction);
+            //}
+            
+            return View(transactionCreateViewModel);
         }
 
         // GET: Transactions/Edit/5

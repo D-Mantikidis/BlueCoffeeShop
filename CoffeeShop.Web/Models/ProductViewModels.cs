@@ -9,7 +9,7 @@ namespace CoffeeShop.Web.Models
         public decimal Cost { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public string ProductCategoryID { get; set; }
+        public int ProductCategoryID { get; set; }//to ekana int
         
     }
 

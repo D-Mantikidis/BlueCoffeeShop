@@ -41,8 +41,8 @@ namespace CoffeeShop.EF.Repositories
         }
 
         public async Task<IEnumerable<Transaction>> GetAllAsync()
-        {
-            return await _context.Transactions.Include(transaction => transaction.TransactionLines).ToListAsync();
+        {//redoit 
+            return await _context.Transactions.Include(transaction => transaction.TransactionLines).Include(transaction => transaction.Customer).Include(transaction => transaction.Employee).ToListAsync();
         }
 
         public Transaction? GetById(int id)

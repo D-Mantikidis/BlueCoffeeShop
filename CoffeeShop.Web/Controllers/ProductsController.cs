@@ -55,7 +55,7 @@ namespace CoffeeShop.Web.Controllers
                 Code = product.Code,
                 Cost = product.Cost,
                 Description = product.Description,
-                ProductCategoryID = product.ProductCategory.Description
+                ProductCategoryID = product.ProductCategoryID
                 
             };
 
@@ -79,12 +79,19 @@ namespace CoffeeShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                //var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
+                //var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
+                
                 var newProduct = new Product()
                 {
+                    ProductCategoryID= Int32.Parse(productCreateViewModel.ProductCategoryID),
                     Price = productCreateViewModel.Price,
                     Cost = productCreateViewModel.Cost,
                     Code = productCreateViewModel.Code,
-                    Description = productCreateViewModel.Description
+                    Description = productCreateViewModel.Description,
+                    //ProductCategory= productCategory
+
+
                 };
                 await _productRepo.Create(newProduct);
                 return RedirectToAction(nameof(Index));
