@@ -127,7 +127,7 @@ namespace CoffeeShop.Web.Controllers
                     return BadRequest();
                 currentProductCategory.Code = productCategoryUpdateViewModel.Code;
                 currentProductCategory.Description = productCategoryUpdateViewModel.Description;
-                _productCategoryRepo.Update(id, currentProductCategory);
+                await _productCategoryRepo.Update(id, currentProductCategory);
 
                 return RedirectToAction(nameof(Index));
             }

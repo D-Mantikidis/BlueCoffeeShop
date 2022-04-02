@@ -79,8 +79,8 @@ namespace CoffeeShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
-                //var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
+                var x = Int32.Parse(productCreateViewModel.ProductCategoryID);
+                var  productCategory = await _productCategoryRepo.GetByIdAsync(x);
                 
                 var newProduct = new Product()
                 {
@@ -89,7 +89,7 @@ namespace CoffeeShop.Web.Controllers
                     Cost = productCreateViewModel.Cost,
                     Code = productCreateViewModel.Code,
                     Description = productCreateViewModel.Description,
-                    //ProductCategory= productCategory
+                    ProductCategory= productCategory
 
 
                 };
@@ -147,7 +147,7 @@ namespace CoffeeShop.Web.Controllers
                 currentProduct.Cost = productUpdateViewModel.Cost;
                 currentProduct.Id = productUpdateViewModel.Id;  
                 currentProduct.Code = productUpdateViewModel.Code;
-                _productRepo.Update(id, currentProduct);
+                await _productRepo.Update(id, currentProduct);
                 return RedirectToAction(nameof(Index));
             }
             
