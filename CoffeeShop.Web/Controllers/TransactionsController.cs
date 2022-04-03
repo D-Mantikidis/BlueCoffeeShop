@@ -44,23 +44,39 @@ namespace CoffeeShop.Web.Controllers
         }
 
         // GET: Transactions/Details/5
-           public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var tr = await _transactionRepo.GetByIdAsync(id.Value);
-            /*var transaction = await _context.Transactions
-                .Include(t => t.Customer)
-                .Include(t => t.Employee)
-                .FirstOrDefaultAsync(m => m.Id == id);*/
-            if (tr == null)
+            var transaction = await _transactionRepo.GetByIdAsync(id.Value);
+            if (transaction == null)
             {
                 return NotFound();
             }
+            var viewModel = new TransactionDetailViewModel
+            {
+                Price = transaction.TransactionLines[0].Price,
+                ProductID = transaction.TransactionLines[0].ProductID,
+                Quantity = transaction.TransactionLines[0].Qty
+            };
+            foreach (var transactions in transaction.TransactionLines)
+            {
+                var transactionLineViewModel = new TransactionLineViewModel
+                {
+                    Discount = transactions.Discount,
+                    Quantity = transactions.Qty,
+                    Price = transactions.Price,
+                    ProductID = transactions.ProductID,
+                    TotalPrice = transactions.TotalPrice,
+                    ID= transactions.Id
 
-            return View(tr);
+                };
+                viewModel.TransactionLines.Add(transactionLineViewModel);
+            }
+
+            return View(transaction);
         }
 
         // GET: Transactions/Create

@@ -1,4 +1,4 @@
-﻿@model CoffeeShop.Model.Transaction
+﻿@model TransactionDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -41,6 +41,33 @@
             @Html.DisplayFor(model => model.Employee.Id)
         </dd>
     </dl>
+    <p>
+        <a asp-controller="TodoComment" asp-action="Create">Create New Comment</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Text
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comment in Model.TransactionLines)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => comment.Discount)
+                    </td>
+                    <td>
+                        <a asp-controller="TodoComment" asp-action="Delete" asp-route-id="@comment.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
