@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeShop.EF.Migrations
 {
     [DbContext(typeof(CoffeeShopContext))]
-    [Migration("20220402225817_Initial")]
+    [Migration("20220403204043_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,6 +103,9 @@ namespace CoffeeShop.EF.Migrations
                     b.Property<int>("ProductCategoryID")
                         .HasColumnType("int");
 
+                    b.Property<int>("TransactionLineID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryID");
@@ -171,7 +174,10 @@ namespace CoffeeShop.EF.Migrations
             modelBuilder.Entity("CoffeeShop.Model.TransactionLine", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -193,9 +199,12 @@ namespace CoffeeShop.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID")
+                        .IsUnique();
 
-                    b.ToTable("TransactionLine");
+                    b.HasIndex("TransactionID");
+
+                    b.ToTable("TransactionLine", (string)null);
                 });
 
             modelBuilder.Entity("CoffeeShop.Model.Product", b =>
@@ -230,15 +239,15 @@ namespace CoffeeShop.EF.Migrations
 
             modelBuilder.Entity("CoffeeShop.Model.TransactionLine", b =>
                 {
-                    b.HasOne("CoffeeShop.Model.Transaction", "Transaction")
-                        .WithMany("TransactionLines")
-                        .HasForeignKey("Id")
+                    b.HasOne("CoffeeShop.Model.Product", "Product")
+                        .WithOne("TransactionLine")
+                        .HasForeignKey("CoffeeShop.Model.TransactionLine", "ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeShop.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
+                    b.HasOne("CoffeeShop.Model.Transaction", "Transaction")
+                        .WithMany("TransactionLines")
+                        .HasForeignKey("TransactionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -255,6 +264,12 @@ namespace CoffeeShop.EF.Migrations
             modelBuilder.Entity("CoffeeShop.Model.Employee", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("CoffeeShop.Model.Product", b =>
+                {
+                    b.Navigation("TransactionLine")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CoffeeShop.Model.ProductCategory", b =>

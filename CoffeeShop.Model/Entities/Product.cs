@@ -14,6 +14,7 @@ namespace CoffeeShop.Model
 
         // Entity Framework
         public ProductCategory ProductCategory { get; set; }
+        public List<TransactionLine> TransactionLines { get; set; }
 
         public Product()
         {

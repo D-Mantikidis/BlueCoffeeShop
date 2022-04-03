@@ -90,6 +90,7 @@ namespace CoffeeShop.EF.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductCategoryID = table.Column<int>(type: "int", nullable: false),
+                    TransactionLineID = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
@@ -110,13 +111,14 @@ namespace CoffeeShop.EF.Migrations
                 name: "TransactionLine",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    ProductID = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Qty = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TransactionID = table.Column<int>(type: "int", nullable: false)
+                    TransactionID = table.Column<int>(type: "int", nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -128,8 +130,8 @@ namespace CoffeeShop.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TransactionLine_Transaction_Id",
-                        column: x => x.Id,
+                        name: "FK_TransactionLine_Transaction_TransactionID",
+                        column: x => x.TransactionID,
                         principalTable: "Transaction",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -153,7 +155,13 @@ namespace CoffeeShop.EF.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TransactionLine_ProductID",
                 table: "TransactionLine",
-                column: "ProductID");
+                column: "ProductID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionLine_TransactionID",
+                table: "TransactionLine",
+                column: "TransactionID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

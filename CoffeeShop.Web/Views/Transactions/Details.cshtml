@@ -10,62 +10,62 @@
     <h4>Transaction</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Date)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Date)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TotalPrice)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TotalPrice)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PaymentMethod)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PaymentMethod)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CustomerID)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CustomerID)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EmployeeID)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EmployeeID)
         </dd>
     </dl>
     @*<p>
         <a asp-controller="TransactionsController" asp-action="Create">Create New Transaction</a>
-    </p>*@
+        </p>*@
 
     <table class="table">
-       <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProductID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TransactionLines.First().Discount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalPrice)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
         <tbody>
             @foreach (var comment in Model.TransactionLines)
             {
@@ -85,15 +85,15 @@
                     <td>
                         @Html.DisplayFor(modelItem => comment.TotalPrice)
                     </td>
-                   @* <td>
+                    @* <td>
                         <a asp-controller="TransactionsController" asp-action="Delete" asp-route-id="@comment.ID">Delete</a>
-                    </td>*@
+                        </td>*@
                 </tr>
             }
         </tbody>
     </table>
 </div>
 <div>
-    @*<a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+    <a asp-action="AddTransactionLine" asp-route-id="@Model?.Id">Add New Line</a>
     <a asp-action="Index">Back to List</a>
 </div>

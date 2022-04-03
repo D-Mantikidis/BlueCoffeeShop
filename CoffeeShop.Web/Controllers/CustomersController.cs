@@ -10,6 +10,7 @@ using CoffeeShop.EF.Context;
 using CoffeeShop.Model;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Web.Models;
+using CoffeeShop.Model.Handlers;
 
 namespace CoffeeShop.Web
 {
@@ -17,10 +18,12 @@ namespace CoffeeShop.Web
     {
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<Customer> _customerRepo;
+        private CustomerHandler _customerHandler;
 
         public CustomersController(IEntityRepo<Customer> customerRepo)
         {
             _customerRepo = customerRepo;
+            _customerHandler = new CustomerHandler();
         }
 
         // GET: Customers
@@ -54,9 +57,16 @@ namespace CoffeeShop.Web
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var customers = await _customerRepo.GetAllAsync();
+
+            var newCustomer = new CustomerCreateViewModel
+            {
+                IsAvailable = _customerHandler.CheckCustomerAvail(customers, 1)
+            };
+            
+            return View(newCustomer);
         }
 
         // POST: Customers/Create
@@ -78,6 +88,7 @@ namespace CoffeeShop.Web
                 await _customerRepo.Create(newCustomer);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(customerViewModel);
         }
 

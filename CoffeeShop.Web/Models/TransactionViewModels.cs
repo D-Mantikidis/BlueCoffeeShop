@@ -16,14 +16,13 @@ namespace CoffeeShop.Web.Models
 
     public class TransactionCreateViewModel
     {
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public int CustomerID { get; set; }
         public int EmployeeID { get; set; }
         public decimal TotalPrice { get; set; }
         public PaymentMethodEnum PaymentMethod { get; set; }
-
-
-        //public List<TransactionLine>? TransactionLines { get; set; }
+        public List<TransactionLine>? TransactionLines { get; set; }
     }
 
     public class TransactionDetailViewModel

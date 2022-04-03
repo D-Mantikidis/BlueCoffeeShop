@@ -39,6 +39,7 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+        <a class="btn-primary btn-primary" asp-action=AddTransactionLine asp-route-id=@{}>Add New Line</a>
     </div>
 </div>
 
@@ -47,27 +48,26 @@
         <form asp-action="TransactionLineIndex">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label ="Qty" class="control-label">Quantity </label>
-                <input ="Qty" class="form-control" />
+                <label asp-for="TransactionLines." class="control-label">Quantity </label>
+                <input asp-for="Qty" class="form-control" />
             </div>
             <div class="form-group">
-                <label ="Price" class="control-label">Price </label>
-                <input ="Price" class="form-control" />
+                <label asp-for="Price" class="control-label">Price </label>
+                <input asp-for="Price" class="form-control" />
             </div>
             <div class="form-group">
-                <label ="Discount" class="control-label">Discount </label>
-                <input ="Discount" class="form-control" />
+                <label asp-for="Discount" class="control-label">Discount </label>
+                <input asp-for="Discount" class="form-control" />
             </div>
              <div class="form-group">
-                <label ="TotalPrice" class="control-label">TotalPrice </label>
-                <input ="TotalPrice" class="form-control" />
+                <label asp-for="TotalPrice" class="control-label">TotalPrice </label>
+                <input asp-for="TotalPrice" class="form-control" />
             </div>
 
             
         </form>
     </div>
-</div>
-*@
+</div>*@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

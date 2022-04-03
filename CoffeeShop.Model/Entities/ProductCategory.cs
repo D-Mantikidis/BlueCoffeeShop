@@ -15,7 +15,6 @@ namespace CoffeeShop.Model
 
         public ProductCategory()
         {
-            Products = new List<Product>();
         }
     }
 }
