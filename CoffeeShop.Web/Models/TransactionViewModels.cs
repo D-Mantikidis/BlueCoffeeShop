@@ -10,6 +10,7 @@ namespace CoffeeShop.Web.Models
         public int EmployeeID { get; set; }
         public decimal TotalPrice { get; set; }
         public PaymentMethodEnum PaymentMethod { get; set; }
+        public List<TransactionLineViewModel> TransactionLines { get; set; } = new List<TransactionLineViewModel>();
         //public List<TransactionLine>? TransactionLines { get; set; }
     }
 
@@ -37,7 +38,7 @@ namespace CoffeeShop.Web.Models
         public int EmployeeID { get; set; }
         public int Id { get; set; }
 
-
+        //public List<TransactionLine>? TransactionLines { get; set; }
 
         public List<TransactionLineViewModel> TransactionLines { get; set; } = new List<TransactionLineViewModel>();  
     }

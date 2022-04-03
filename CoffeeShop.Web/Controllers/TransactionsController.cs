@@ -21,6 +21,8 @@ namespace CoffeeShop.Web.Controllers
         private readonly IEntityRepo<Customer> _customerRepo;
         private readonly IEntityRepo<Employee> _employeeRepo;
         private EnumsHandler _enumsHandler;
+        
+       
 
         public TransactionsController(IEntityRepo<Transaction> transactionRepo,
             IEntityRepo<Employee> employeeRepo, IEntityRepo<Customer> customerRepo)
@@ -57,9 +59,13 @@ namespace CoffeeShop.Web.Controllers
             }
             var viewModel = new TransactionDetailViewModel
             {
-                Price = transaction.TransactionLines[0].Price,
-                ProductID = transaction.TransactionLines[0].ProductID,
-                Quantity = transaction.TransactionLines[0].Qty
+                CustomerID = transaction.CustomerID,
+                EmployeeID = transaction.EmployeeID,
+                Date = transaction.Date,
+                Id = transaction.Id,
+                PaymentMethod = transaction.PaymentMethod,
+                TotalPrice=transaction.TotalPrice,
+               
             };
             foreach (var transactions in transaction.TransactionLines)
             {
@@ -76,7 +82,7 @@ namespace CoffeeShop.Web.Controllers
                 viewModel.TransactionLines.Add(transactionLineViewModel);
             }
 
-            return View(transaction);
+            return View(viewModel);
         }
 
         // GET: Transactions/Create
