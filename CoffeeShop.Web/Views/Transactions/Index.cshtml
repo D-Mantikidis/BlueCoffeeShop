@@ -16,16 +16,16 @@
                 @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
+                @Html.DisplayNameFor(model => model.Employee)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Customer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Employee)
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
             </th>
             <th></th>
         </tr>
@@ -37,19 +37,18 @@
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
+                @Html.DisplayFor(modelItem => item.Employee.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentMethod)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.Code)
+                @Html.DisplayFor(modelItem => item.TotalPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Employee.Name)
-            </td>
-            <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
                 @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
             </td>

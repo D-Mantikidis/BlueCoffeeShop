@@ -105,6 +105,7 @@ namespace CoffeeShop.Web.Controllers
                 Code = productCategory.Code,
                 Description = productCategory.Description
             };
+            ViewData["ProductCategoryList"] = new SelectList(_enumsHandler.GetProductTypeEnumList(), "ID", "Name");
             return View(updateProductCategory);
         }
 
@@ -127,6 +128,7 @@ namespace CoffeeShop.Web.Controllers
                     return BadRequest();
                 currentProductCategory.Code = productCategoryUpdateViewModel.Code;
                 currentProductCategory.Description = productCategoryUpdateViewModel.Description;
+                currentProductCategory.ProductType = productCategoryUpdateViewModel.ProductType;
                 await _productCategoryRepo.Update(id, currentProductCategory);
 
                 return RedirectToAction(nameof(Index));

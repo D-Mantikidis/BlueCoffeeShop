@@ -61,7 +61,7 @@ namespace CoffeeShop.Web.Controllers
                 Code = product.Code,
                 Cost = product.Cost,
                 Description = product.Description,
-                ProductCategoryID = product.ProductCategoryID
+                ProductCategory = product.ProductCategory.Description
                 
             };
 
@@ -125,6 +125,8 @@ namespace CoffeeShop.Web.Controllers
                 Price= product.Price,
             };
 
+            var a = await _productCategoryRepo.GetAllAsync();
+            ViewData["ProductCategoryList"] = new SelectList(a, "Id", "Description");
             return View(updateProduct);
         }
 
@@ -150,6 +152,7 @@ namespace CoffeeShop.Web.Controllers
                 currentProduct.Cost = productUpdateViewModel.Cost;
                 currentProduct.Id = productUpdateViewModel.Id;  
                 currentProduct.Code = productUpdateViewModel.Code;
+                currentProduct.ProductCategoryID = productUpdateViewModel.ProductCategoryID;
                 await _productRepo.Update(id, currentProduct);
                 return RedirectToAction(nameof(Index));
             }
@@ -176,7 +179,8 @@ namespace CoffeeShop.Web.Controllers
                 Price = product.Price,
                 Cost = product.Cost,
                 Id = product.Id,
-                Description= product.Description,
+                Description = product.Description,
+                ProductCategory = product.ProductCategory.Description
             };
 
             return View(viewModel);

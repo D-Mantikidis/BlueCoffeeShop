@@ -9,7 +9,7 @@ namespace CoffeeShop.Web.Models
         public decimal Cost { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public int ProductCategoryID { get; set; }//to ekana int
+        public string ProductCategory { get; set; }
         
     }
 
@@ -29,7 +29,7 @@ namespace CoffeeShop.Web.Models
         public decimal Cost { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public string ProductCategoryID { get; set; }
+        public string ProductCategory { get; set; }
     }
 
     public class ProductUpdateViewModel
@@ -39,6 +39,6 @@ namespace CoffeeShop.Web.Models
         public decimal Cost { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
-        public string ProductCategoryID { get; set; }
+        public int ProductCategoryID { get; set; }
     }
 }

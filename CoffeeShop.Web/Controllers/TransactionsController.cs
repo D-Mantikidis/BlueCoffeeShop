@@ -64,8 +64,8 @@ namespace CoffeeShop.Web.Controllers
             }
             var viewModel = new TransactionDetailViewModel
             {
-                CustomerID = transaction.CustomerID,
-                EmployeeID = transaction.EmployeeID,
+                Customer = transaction.Customer.Description,
+                Employee = transaction.Employee.Surname,
                 Date = transaction.Date,
                 Id = transaction.Id,
                 PaymentMethod = transaction.PaymentMethod,
@@ -74,7 +74,7 @@ namespace CoffeeShop.Web.Controllers
             };
             foreach (var transactions in transaction.TransactionLines)
             {
-                var transactionLineViewModel = new TransactionLineViewModel
+                var transactionLineDetailViewModel = new TransactionLineDetailViewModel
                 {
                     Discount = transactions.Discount,
                     Quantity = transactions.Qty,
@@ -84,7 +84,7 @@ namespace CoffeeShop.Web.Controllers
                     ID= transactions.Id
 
                 };
-                viewModel.TransactionLines.Add(transactionLineViewModel);
+                viewModel.TransactionLines.Add(transactionLineDetailViewModel);
             }
 
             return View(viewModel);
