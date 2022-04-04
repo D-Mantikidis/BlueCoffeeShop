@@ -25,7 +25,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task Delete(int id)
         {
-            var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
+            var foundProduct = await _context.Products.SingleOrDefaultAsync(product => product.Id == id);
             if (foundProduct == null)
                 return;
             _context.Products.Remove(foundProduct);
@@ -54,7 +54,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task Update(int id, Product entity)
         {
-            var foundProduct = _context.Products.SingleOrDefault(product => product.Id == id);
+            var foundProduct = await _context.Products.SingleOrDefaultAsync(product => product.Id == id);
             if (foundProduct is null)
                 return;
             foundProduct.Code = entity.Code;

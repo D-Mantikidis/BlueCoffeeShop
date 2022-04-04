@@ -27,7 +27,7 @@ namespace CoffeeShop.EF.Repositories
         public async Task Delete(int id)
         {
             
-            var foundTransactionLine = _context.TransactionLines.SingleOrDefault(transactionLine => transactionLine.Id == id);
+            var foundTransactionLine = await _context.TransactionLines.SingleOrDefaultAsync(transactionLine => transactionLine.Id == id);
             if (foundTransactionLine == null)
                 return;
             _context.TransactionLines.Remove(foundTransactionLine);
@@ -60,7 +60,7 @@ namespace CoffeeShop.EF.Repositories
         public async Task Update(int id, TransactionLine entity)
         {
             
-            var foundTransactionLine = _context.TransactionLines.SingleOrDefault(transactionLine => transactionLine.Id == id);
+            var foundTransactionLine = await _context.TransactionLines.SingleOrDefaultAsync(transactionLine => transactionLine.Id == id);
             if (foundTransactionLine is null)
                 return;
             foundTransactionLine.Qty = entity.Qty;

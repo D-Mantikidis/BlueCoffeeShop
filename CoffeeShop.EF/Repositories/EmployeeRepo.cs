@@ -24,7 +24,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task Delete(int id)
         {
-            var foundEmployee = _context.Employees.SingleOrDefault(employee => employee.Id == id);
+            var foundEmployee = await _context.Employees.SingleOrDefaultAsync(employee => employee.Id == id);
             if (foundEmployee == null)
                 return;
             _context.Employees.Remove(foundEmployee);
@@ -54,7 +54,7 @@ namespace CoffeeShop.EF.Repositories
 
         public async Task Update(int id, Employee entity)
         {
-            var foundEmployee = _context.Employees.SingleOrDefault(employee => employee.Id == id);
+            var foundEmployee = await _context.Employees.SingleOrDefaultAsync(employee => employee.Id == id);
             if (foundEmployee is null)
                 return;
             foundEmployee.Name = entity.Name;
