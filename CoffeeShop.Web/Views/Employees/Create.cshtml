@@ -9,6 +9,16 @@
 
 <h4>Employee</h4>
 <hr />
+@{
+    if (Model is not null && !Model.IsAvailable)
+    {
+        <div class="row">
+            <div class="alert alert-warning" role="alert">
+            There are no open positions for this type of Employee
+        </div>
+    </div>
+    }
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -45,5 +55,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

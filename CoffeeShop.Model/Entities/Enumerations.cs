@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Model
 {
-   public enum ProductTypeEnum
+    public enum ProductTypeEnum
     {
         Coffee,
         Beverages,
@@ -26,4 +26,5 @@ namespace CoffeeShop.Model
         Barista,
         Waiter
     }
+
 }

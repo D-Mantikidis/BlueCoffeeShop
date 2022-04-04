@@ -19,11 +19,21 @@ namespace CoffeeShop.Web.Controllers
         private readonly CoffeeShopContext _context;
         private readonly IEntityRepo<Employee> _employeeRepo;
         private EnumsHandler _enumshandler;
+        private EmployeeHandler _employeeHandler;
+        private IDictionary<EmployeeType, int> _employeeLimits;
 
         public EmployeesController(IEntityRepo<Employee> employeeRepo)
         {
             _employeeRepo = employeeRepo;
             _enumshandler = new EnumsHandler();
+            _employeeHandler = new EmployeeHandler();
+            _employeeLimits = new Dictionary<EmployeeType, int>()
+            {
+                { EmployeeType.Manager, 1},
+                { EmployeeType.Cashier, 2},
+                { EmployeeType.Barista, 2},
+                { EmployeeType.Waiter, 3},
+            };
         }
 
         // GET: Employees
@@ -71,7 +81,13 @@ namespace CoffeeShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Surname,SalaryPerMonth,EmployeeType")] EmployeeCreateViewModel employeeViewModel)
         {
-            if (ModelState.IsValid)
+            var employees = await _employeeRepo.GetAllAsync();
+            var availEmployee = _employeeHandler.CheckStaffAvail(employeeViewModel.EmployeeType,
+                                                 employees,
+                                                 _employeeLimits[employeeViewModel.EmployeeType]);
+
+
+            if (ModelState.IsValid && availEmployee)
             {
                 var newEmployee = new Employee()
                 {
@@ -85,7 +101,10 @@ namespace CoffeeShop.Web.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(employeeViewModel);
+            
+            //TODO: Fix the validation for employees
+            employeeViewModel.IsAvailable = availEmployee;
+            return RedirectToAction(nameof(Create), employeeViewModel);
         }
 
         // GET: Employees/Edit/5
@@ -108,6 +127,7 @@ namespace CoffeeShop.Web.Controllers
                 SalaryPerMonth = employee.SalaryPerMonth,
                 EmployeeType = employee.EmployeeType
             };
+            ViewData["EmployeeTypeList"] = new SelectList(_enumshandler.GetEmployeeEnumList(), "ID", "Name");
             return View(updateEmployee);
         }
 

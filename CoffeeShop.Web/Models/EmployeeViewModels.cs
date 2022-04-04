@@ -17,6 +17,7 @@ namespace CoffeeShop.Web.Models
         public string Surname { get; set; }
         public decimal SalaryPerMonth { get; set; }
         public EmployeeType EmployeeType { get; set; }
+        public bool IsAvailable { get; set; }
     }
 
     public class EmployeeUpdateViewModel

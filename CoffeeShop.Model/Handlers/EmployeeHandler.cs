@@ -13,7 +13,7 @@ namespace CoffeeShop.Model.Handlers
 
         }
 
-        public bool CheckStaffAvail(EmployeeType employeeType, List<Employee> employees, int limit)
+        public bool CheckStaffAvail(EmployeeType employeeType, IEnumerable<Employee> employees, int limit)
         {
             if (employees.Where(employee => employee.EmployeeType == employeeType).Count() == limit)
                 return false;
