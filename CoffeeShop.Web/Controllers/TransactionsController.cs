@@ -58,6 +58,9 @@ namespace CoffeeShop.Web.Controllers
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var a = await _productRepo.GetAllAsync();
+
+            ViewData["ProductID"] = a;
             if (id == null)
             {
                 return NotFound();
@@ -121,7 +124,7 @@ namespace CoffeeShop.Web.Controllers
                 var newTransaction = new Transaction
                 {
 
-                    Date = transactionCreateViewModel.Date,
+                    Date = DateTime.Now,
                     CustomerID = transactionCreateViewModel.CustomerID,
                     EmployeeID = transactionCreateViewModel.EmployeeID,
                     //TransactionLines = new Transaction().TransactionLines,
