@@ -1,8 +1,11 @@
 using CoffeeShop.EF.Context;
 using CoffeeShop.EF.Repositories;
 using CoffeeShop.Model;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -15,6 +18,20 @@ builder.Services.AddScoped<IEntityRepo<ProductCategory>, ProductCategoryRepo>();
 builder.Services.AddScoped<IEntityRepo<TransactionLine>, TransactionLineRepo>();
 
 var app = builder.Build();
+var supportedCultures = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("es"),
+    };
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US"),
+    // Formatting numbers, dates, etc.
+    SupportedCultures = supportedCultures,
+    // Localized UI strings.
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
