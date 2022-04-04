@@ -105,7 +105,7 @@ namespace CoffeeShop.Web.Controllers
                 Code = productCategory.Code,
                 Description = productCategory.Description
             };
-            ViewData["ProductCategoryList"] = new SelectList(_enumsHandler.GetProductTypeEnumList(), "ID", "Name");
+            ViewData["ProductTypeList"] = new SelectList(_enumsHandler.GetProductTypeEnumList(), "ID", "Name");
             return View(updateProductCategory);
         }
 
