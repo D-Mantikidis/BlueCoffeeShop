@@ -26,6 +26,10 @@
                 <select asp-for="EmployeeID" class ="form-control" asp-items="ViewBag.EmployeeID"></select>
             </div>
             <div class="form-group">
+                <label asp-for="PaymentMethod" class="control-label">Payment Type</label>
+                <select asp-for="PaymentMethod" class ="form-control" asp-items="ViewBag.PaymentTypeList"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

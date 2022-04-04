@@ -107,7 +107,7 @@ namespace CoffeeShop.Web.Controllers
             ViewData["CustomerID"] = new SelectList(a, "Id", "Description");
             ViewData["EmployeeID"] = new SelectList(b, "Id", "Name");
 
-            //ViewData["PaymentMethod"] = new SelectList(_enumsHandler.GetPaymentEnumList(), "ID", "Name");
+            ViewData["PaymentTypeList"] = new SelectList(_enumsHandler.GetPaymentEnumList(), "ID", "Name");
             return View();
         }
 
@@ -116,7 +116,7 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Date,CustomerID,EmployeeID")] TransactionCreateViewModel transactionCreateViewModel)
+        public async Task<IActionResult> Create([Bind("Date,CustomerID,EmployeeID,PaymentMethod")] TransactionCreateViewModel transactionCreateViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +129,7 @@ namespace CoffeeShop.Web.Controllers
                     EmployeeID = transactionCreateViewModel.EmployeeID,
                     //TransactionLines = new Transaction().TransactionLines,
                     //TotalPrice = transactionCreateViewModel.TotalPrice,
-                    //PaymentMethod = transactionCreateViewModel.PaymentMethod,
+                    PaymentMethod = transactionCreateViewModel.PaymentMethod,
                     //Customer=null,
                     //Employee=null
                 };
