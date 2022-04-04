@@ -24,7 +24,8 @@ namespace CoffeeShop.Web.Controllers
         private readonly IEntityRepo<Product> _productRepo;
         private EnumsHandler _enumsHandler;
         
-       
+
+
 
         public TransactionsController(IEntityRepo<Transaction> transactionRepo,
             IEntityRepo<Employee> employeeRepo, IEntityRepo<Customer> customerRepo,
@@ -36,6 +37,7 @@ namespace CoffeeShop.Web.Controllers
             _transactionLineRepo = transactionLineRepo;
             _productRepo = productRepo;
             _enumsHandler = new EnumsHandler();
+            
 
         }
         public async Task<IActionResult> TransactionLineIndex()
@@ -53,6 +55,9 @@ namespace CoffeeShop.Web.Controllers
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var a = await _productRepo.GetAllAsync();
+
+            ViewData["ProductID"] = a;
             if (id == null)
             {
                 return NotFound();
@@ -107,7 +112,7 @@ namespace CoffeeShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Date,CustomerID,EmployeeID,TotalPrice,PaymentMethod")] TransactionCreateViewModel transactionCreateViewModel)
+        public async Task<IActionResult> Create([Bind("CustomerID,EmployeeID,TotalPrice,PaymentMethod")] TransactionCreateViewModel transactionCreateViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +120,7 @@ namespace CoffeeShop.Web.Controllers
                 var newTransaction = new Transaction
                 {
 
-                    Date = transactionCreateViewModel.Date,
+                    Date = DateTime.Now,
                     CustomerID = transactionCreateViewModel.CustomerID,
                     EmployeeID = transactionCreateViewModel.EmployeeID,
                     //TransactionLines = new Transaction().TransactionLines,
