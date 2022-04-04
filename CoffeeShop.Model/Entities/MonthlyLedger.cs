@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeShop.Model
 {
-    public class MonthlyLedger
+    public class MonthlyLedger : BaseEntity
     {
         public MonthlyLedger()
         {

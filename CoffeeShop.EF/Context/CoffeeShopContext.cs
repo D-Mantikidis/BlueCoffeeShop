@@ -22,6 +22,7 @@ namespace CoffeeShop.EF.Context
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionLine> TransactionLines { get; set; }
+        public DbSet<MonthlyLedger> MonthlyLedgers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +32,7 @@ namespace CoffeeShop.EF.Context
             modelBuilder.ApplyConfiguration(new ProductCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionLineConfiguration());
+            modelBuilder.ApplyConfiguration(new MonthlyLedgerConfiguration());
             base.OnModelCreating(modelBuilder);
         }
 
