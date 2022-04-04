@@ -39,8 +39,8 @@ namespace CoffeeShop.Web.Controllers
             _transactionLineRepo = transactionLineRepo;
             _productRepo = productRepo;
             _enumsHandler = new EnumsHandler();
-            _transactionHandler= new TransactionHandler();
-            _transactionLineHandler= new TransactionLineHandler();
+            _transactionHandler = new TransactionHandler();
+            _transactionLineHandler = new TransactionLineHandler();
 
         }
         public async Task<IActionResult> TransactionLineIndex()
@@ -77,8 +77,8 @@ namespace CoffeeShop.Web.Controllers
                 Date = transaction.Date,
                 Id = transaction.Id,
                 PaymentMethod = transaction.PaymentMethod,
-                TotalPrice=transaction.TotalPrice,
-               
+                TotalPrice = transaction.TotalPrice,
+
             };
             foreach (var transactions in transaction.TransactionLines)
             {
@@ -89,7 +89,7 @@ namespace CoffeeShop.Web.Controllers
                     Price = transactions.Price,
                     ProductID = transactions.ProductID,
                     TotalPrice = transactions.TotalPrice,
-                    ID= transactions.Id
+                    ID = transactions.Id
 
                 };
                 viewModel.TransactionLines.Add(transactionLineDetailViewModel);
@@ -106,7 +106,7 @@ namespace CoffeeShop.Web.Controllers
             var b = await _employeeRepo.GetAllAsync();
             ViewData["CustomerID"] = new SelectList(a, "Id", "Description");
             ViewData["EmployeeID"] = new SelectList(b, "Id", "Name");
-            
+
             //ViewData["PaymentMethod"] = new SelectList(_enumsHandler.GetPaymentEnumList(), "ID", "Name");
             return View();
         }
@@ -120,7 +120,7 @@ namespace CoffeeShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-            
+
                 var newTransaction = new Transaction
                 {
 
@@ -136,7 +136,7 @@ namespace CoffeeShop.Web.Controllers
                 await _transactionRepo.Create(newTransaction);
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return View(transactionCreateViewModel);
         }
 
@@ -149,7 +149,7 @@ namespace CoffeeShop.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddTransactionLine(int? id, [Bind("Quantity,Price,ProductID,Discount")] TransactionLineViewModel transactionLineViewModel)
+        public async Task<IActionResult> AddTransactionLine(int? id, [Bind("Quantity,ProductID,Discount")] TransactionLineViewModel transactionLineViewModel)
         {
             if (id == null)
             {
@@ -164,16 +164,20 @@ namespace CoffeeShop.Web.Controllers
                 {
                     Discount = transactionLineViewModel.Discount,
                     Qty = transactionLineViewModel.Quantity,
-                    Price = (Decimal)transactionLineViewModel.Price,
+                    //Price = transactionLineViewModel.,
                     ProductID = transactionLineViewModel.ProductID,
                     //TotalPrice = transactionLineViewModel.TotalPrice,
                     TransactionID = id.Value
 
                 };
+
+                var product = await _productRepo.GetByIdAsync(newTransactionLine.ProductID);
+                newTransactionLine.Price = product.Price;
                 newTransactionLine.TotalPrice = _transactionLineHandler.GetTotalPrice(newTransactionLine);
-                
+
                 await _transactionLineRepo.Create(newTransactionLine);
                 transaction.TotalPrice = _transactionHandler.GetTotalPrice(transaction);
+                _transactionHandler.ApplyDiscount(transaction, 0.15f, 10);
                 await _transactionRepo.Update(id.Value, transaction);
 
                 return RedirectToAction(nameof(Details), new { id });
@@ -214,22 +218,8 @@ namespace CoffeeShop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(transaction);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TransactionExists(transaction.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(transaction);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerID"] = new SelectList(_context.Customers, "Id", "Code", transaction.CustomerID);
@@ -268,9 +258,15 @@ namespace CoffeeShop.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TransactionExists(int id)
+        [HttpPost]
+        private async Task<IActionResult> CheckPayMethod(int id)
         {
-            return _context.Transactions.Any(e => e.Id == id);
+            var currentTransaction = await _transactionRepo.GetByIdAsync(id);
+            if (currentTransaction == null)
+                return BadRequest();
+            var paymentList = _transactionHandler.CheckPaymentMethod(currentTransaction, 50);
+            ViewData["ProductTypeList"] = new SelectList(paymentList, "Id", "Code");
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

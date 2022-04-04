@@ -15,7 +15,7 @@ namespace CoffeeShop.Model.Handlers
 
         public decimal GetTotalPrice(TransactionLine transactionLine)
         {
-            return (transactionLine.Qty * transactionLine.Price)- transactionLine.Discount;
+            return (transactionLine.Qty * transactionLine.Price) - (transactionLine.Qty * transactionLine.Price) * transactionLine.Discount;
         }
     }
 }
