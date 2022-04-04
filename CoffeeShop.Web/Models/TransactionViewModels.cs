@@ -16,7 +16,7 @@ namespace CoffeeShop.Web.Models
     public class TransactionCreateViewModel
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } 
         public int CustomerID { get; set; }
         public int EmployeeID { get; set; }
         public decimal TotalPrice { get; set; }
